@@ -17,7 +17,7 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ✅ handleLogin — returns success or failure
+  //  handleLogin — returns success or failure
   const handleLogin = async (api_url, email, password) => {
     try {
       const response = await fetch(`${api_url}/admin/api/login`, {
@@ -33,10 +33,12 @@ export default function Login() {
       if (!response.ok) {
         return {
           success: false,
-          message: data.message || "Invalid credentials",
+          message: "Invalid credentials",
         };
       } else {
-        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("auth_token", data.auth_token);
+        const token = localStorage.getItem("auth_token");
+        console.log("Token:", token);
         navigate("/Dashboard");
 
         return {
