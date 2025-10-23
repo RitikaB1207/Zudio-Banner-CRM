@@ -1,1 +1,2 @@
-export const api_url = "https://c203fc690537.ngrok-free.app";
+// config.js
+export const api_url = "https://greatest-appear-module-buck.trycloudflare.com";

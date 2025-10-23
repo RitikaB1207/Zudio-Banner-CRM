@@ -65,10 +65,9 @@ export default function Login() {
 
     // Frontend check (for hardcoded default credentials)
     if (email === defaultEmail && password === defaultPassword) {
-      handleLogin(api_url, email, password);
+      await handleLogin(api_url, email, password);
       console.log("Successful login checked from frontend!");
       setLoading(false);
-
       return;
     }
 
