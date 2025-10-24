@@ -1,2 +1,3 @@
 // config.js
-export const api_url = "https://greatest-appear-module-buck.trycloudflare.com";
+export const api_url =
+  "https://phentermine-peter-pendant-roberts.trycloudflare.com";

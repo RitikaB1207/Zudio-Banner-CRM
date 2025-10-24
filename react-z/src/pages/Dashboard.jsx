@@ -6,8 +6,14 @@ import { api_url } from "../../config";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [selectedColor, setSelectedColor] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
   const [selectedPage, setSelectedPage] = useState("");
+
+  const [images, setImages] = useState({
+    homePage: "",
+    formPage: "",
+    profilePage: "",
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
@@ -20,9 +26,21 @@ export default function Dashboard() {
   }, [navigate]);
 
   const handleSquareClick = (event, pageName) => {
-    const color = window.getComputedStyle(event.currentTarget).backgroundColor;
-    setSelectedColor(color);
     setSelectedPage(pageName);
+
+    switch (pageName) {
+      case "Homepage":
+        setPreviewImage(images.homePage);
+        break;
+      case "Form Page":
+        setPreviewImage(images.formPage);
+        break;
+      case "Profile Page":
+        setPreviewImage(images.profilePage);
+        break;
+      default:
+        setPreviewImage("");
+    }
   };
 
   useEffect(() => {
@@ -38,8 +56,10 @@ export default function Dashboard() {
           },
         });
 
-        console.log("Fetched JSON data:", response.data);
-        console.log("Home Page image URL:", response.data.images.homePage);
+        // console.log("Fetched JSON data:", response.data);
+        if (response.data && response.data.images) {
+          setImages(response.data.images);
+        }
       } catch (error) {
         if (error.response) {
           console.error(
@@ -65,7 +85,7 @@ export default function Dashboard() {
           <div className="section1_main">
             <div className="left_1">
               <p>Select an image to upload!</p>
-              {selectedColor && (
+              {previewImage && (
                 <p>
                   Updating the image on this page:{" "}
                   <strong>{selectedPage}</strong>
@@ -73,13 +93,63 @@ export default function Dashboard() {
               )}
             </div>
             <div className="right_1">
-              <div
-                className="preview_square"
-                style={{
-                  backgroundColor: selectedColor || "#eee",
-                  transition: "background-color 0.4s ease",
-                }}
-              >
+              <div className="preview_square">
+                {selectedPage === "Homepage" && previewImage ? (
+                  // HOMEPAGE — full image
+                  <img
+                    src={previewImage}
+                    alt="Homepage Preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "15px",
+                    }}
+                  />
+                ) : (selectedPage === "Form Page" ||
+                    selectedPage === "Profile Page") &&
+                  previewImage ? (
+                  //  FORM PAGE / PROFILE PAGE
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%",
+                      width: "100%",
+                      borderRadius: "15px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{ height: "40.5%", width: "100%" }}>
+                      <img
+                        src={previewImage}
+                        alt={`${selectedPage} Preview`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        height: "59.5%",
+                        width: "100%",
+                        backgroundColor: "whitesmoke",
+                      }}
+                    ></div>
+                  </div>
+                ) : (
+                  // DEFAULT (no image)
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "#eee",
+                      borderRadius: "15px",
+                    }}
+                  ></div>
+                )}
                 <div className="top_notch"></div>
               </div>
             </div>
@@ -87,31 +157,81 @@ export default function Dashboard() {
         </div>
 
         <div className="section2">
+          {/* Homepage square */}
           <div className="square--main">
             <div
               className="homepage_sq squares"
               onClick={(e) => handleSquareClick(e, "Homepage")}
+              style={{
+                backgroundImage: `url(${images.homePage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                borderRadius: "15px",
+                overflow: "hidden",
+              }}
             >
-              <div className="top_notch"></div>
+              <div className="top_notch_home"></div>
             </div>
             <div className="homepage_txt txt">Home Page</div>
           </div>
 
+          {/* Formpage square */}
           <div className="square--main">
             <div
               className="formpage_sq squares"
               onClick={(e) => handleSquareClick(e, "Form Page")}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                borderRadius: "15px",
+                overflow: "hidden",
+              }}
             >
+              <div
+                style={{
+                  flex: "0 0 40%",
+                  backgroundImage: `url(${images.formPage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              ></div>
+              <div
+                style={{
+                  flex: "1",
+                  backgroundColor: "whitesmoke",
+                }}
+              ></div>
               <div className="top_notch"></div>
             </div>
             <div className="formpage_txt txt">Form Page</div>
           </div>
 
+          {/* Profile page square */}
           <div className="square--main">
             <div
               className="profilepage_sq squares"
               onClick={(e) => handleSquareClick(e, "Profile Page")}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                borderRadius: "15px",
+                overflow: "hidden",
+              }}
             >
+              <div
+                style={{
+                  flex: "0 0 40%",
+                  backgroundImage: `url(${images.profilePage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              ></div>
+              <div
+                style={{
+                  flex: "1",
+                  backgroundColor: "whitesmoke",
+                }}
+              ></div>
               <div className="top_notch"></div>
             </div>
             <div className="profilepage_txt txt">Profile Page</div>

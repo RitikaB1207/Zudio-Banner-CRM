@@ -1,7 +1,7 @@
 .main--section {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 10px;
 }
 
 .section2 {
@@ -21,12 +21,12 @@
 
 .left_1 {
   flex: 1;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 .right_1 {
   flex: 1;
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 .preview_square {
   width: 250px;
@@ -34,9 +34,10 @@
   background-color: lightblue;
   position: relative;
   left: 15%;
-  margin: 10%;
+  /* margin: 10%; */
   border: 5px solid black;
   border-radius: 20px;
+  overflow: hidden;
 }
 
 .squares {
@@ -45,6 +46,8 @@
   cursor: pointer;
   border: 5px solid black;
   border-radius: 20px;
+  background-color: whitesmoke;
+  position: relative;
 }
 
 .logout-btn {
@@ -54,22 +57,27 @@
   display: flex;
   flex-direction: column;
 }
-.homepage_sq {
-  background-color: teal;
-}
 
-.formpage_sq {
-  background-color: burlywood;
-}
-
-.profilepage_sq {
-  background-color: tomato;
-}
 .txt {
   font-size: 18px;
   padding: 10px;
 }
 .top_notch {
+  width: 100px;
+  height: 12px;
+  background-color: black;
+  margin: 0 auto;
+  opacity: 0.667;
+  border-radius: 20px;
+  margin-top: 5px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.top_notch_home {
   width: 100px;
   height: 12px;
   background-color: black;
