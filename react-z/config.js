@@ -1,3 +1,3 @@
 // config.js
 export const api_url =
-  "https://phentermine-peter-pendant-roberts.trycloudflare.com";
+  "https://jar-basement-wed-cooperation.trycloudflare.com";

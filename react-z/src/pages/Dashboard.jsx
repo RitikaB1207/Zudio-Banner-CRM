@@ -7,7 +7,8 @@ import { api_url } from "../../config";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState("");
-  const [selectedPage, setSelectedPage] = useState("");
+  const [selectedPage, setSelectedPage] = useState("Homepage");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [images, setImages] = useState({
     homePage: "",
@@ -44,39 +45,36 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const fetchImage = async () => {
+    const fetchImages = async () => {
       try {
-        const response = await axios.get(`${api_url}/api/data`, {
-          auth: {
-            username: "devuser",
-            password: "devpass1234",
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const { data } = await axios.get(`${api_url}/api/data`, {
+          auth: { username: "devuser", password: "devpass1234" },
+          headers: { "Content-Type": "application/json" },
         });
 
-        // console.log("Fetched JSON data:", response.data);
-        if (response.data && response.data.images) {
-          setImages(response.data.images);
+        if (data?.images) {
+          setImages(data.images);
+          if (data.images.homePage) {
+            setSelectedPage("Homepage");
+            setPreviewImage(data.images.homePage);
+          }
         }
       } catch (error) {
-        if (error.response) {
-          console.error(
-            "Server responded with error:",
-            error.response.status,
-            error.response.data
-          );
-        } else if (error.request) {
-          console.error("No response received:", error.request);
-        } else {
-          console.error("Error in request setup:", error.message);
-        }
+        console.error("Error fetching images:", error);
       }
     };
 
-    fetchImage();
+    fetchImages();
   }, []);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+      // console.log("Selected file:", file);
+    }
+  };
 
   return (
     <div className="p-6 text-center">
@@ -84,7 +82,37 @@ export default function Dashboard() {
         <div className="section1">
           <div className="section1_main">
             <div className="left_1">
-              <p>Select an image to upload!</p>
+              <p className="sel_img">Select an image to upload!</p>
+
+              <button
+                onClick={() => document.getElementById("fileInput").click()}
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  marginBottom: "10px",
+                }}
+              >
+                Choose from Library
+              </button>
+              <input
+                id="fileInput"
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  if (file) {
+                    const imageUrl = URL.createObjectURL(file);
+                    setPreviewImage(imageUrl);
+                    // console.log("Selected file:", file);
+                  }
+                }}
+              />
+
               {previewImage && (
                 <p>
                   Updating the image on this page:{" "}
@@ -109,7 +137,7 @@ export default function Dashboard() {
                 ) : (selectedPage === "Form Page" ||
                     selectedPage === "Profile Page") &&
                   previewImage ? (
-                  //  FORM PAGE / PROFILE PAGE
+                  //  FORM PAGE / PROFILE PAGE Condition
                   <div
                     style={{
                       display: "flex",
@@ -140,7 +168,6 @@ export default function Dashboard() {
                     ></div>
                   </div>
                 ) : (
-                  // DEFAULT (no image)
                   <div
                     style={{
                       width: "100%",
@@ -159,6 +186,7 @@ export default function Dashboard() {
         <div className="section2">
           {/* Homepage square */}
           <div className="square--main">
+            <div className="homepage_txt txt">Home Page</div>
             <div
               className="homepage_sq squares"
               onClick={(e) => handleSquareClick(e, "Homepage")}
@@ -172,11 +200,11 @@ export default function Dashboard() {
             >
               <div className="top_notch_home"></div>
             </div>
-            <div className="homepage_txt txt">Home Page</div>
           </div>
 
           {/* Formpage square */}
           <div className="square--main">
+            <div className="formpage_txt txt">Form Page</div>
             <div
               className="formpage_sq squares"
               onClick={(e) => handleSquareClick(e, "Form Page")}
@@ -203,11 +231,11 @@ export default function Dashboard() {
               ></div>
               <div className="top_notch"></div>
             </div>
-            <div className="formpage_txt txt">Form Page</div>
           </div>
 
           {/* Profile page square */}
           <div className="square--main">
+            <div className="profilepage_txt txt">Profile Page</div>
             <div
               className="profilepage_sq squares"
               onClick={(e) => handleSquareClick(e, "Profile Page")}
@@ -234,7 +262,6 @@ export default function Dashboard() {
               ></div>
               <div className="top_notch"></div>
             </div>
-            <div className="profilepage_txt txt">Profile Page</div>
           </div>
         </div>
       </div>

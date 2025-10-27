@@ -53,6 +53,12 @@
 .logout-btn {
   margin-bottom: 20px;
 }
+
+.sel_img {
+  font-size: 20px;
+  text-align: center;
+  text-transform: capitalize;
+}
 .square--main {
   display: flex;
   flex-direction: column;
